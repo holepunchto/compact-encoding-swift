@@ -3,6 +3,9 @@ import Foundation
 public struct State {
   public var start = 0
   public var end = 0
+  public var remaining: Int {
+    return self.end - self.start
+  }
   public var buffer: Data = Data()
 
   public init() {}
