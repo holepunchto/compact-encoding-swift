@@ -1,144 +1,215 @@
-public struct UInt8: Codec {
-  public typealias Value = Swift.UInt8
+extension Primitive {
+  public struct UInt8: Codec {
+    public typealias Value = Swift.UInt8
 
-  public static func preencode(_ state: inout State, _ value: Value) {
-    state.end += 1
-  }
-
-  public static func encode(_ state: inout State, _ value: Value) throws {
-    guard state.start < state.end else {
-      throw EncodingError.outOfBounds
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 1
     }
 
-    state.buffer[state.start] = value
+    public func encode(_ state: inout State, _ value: Value) throws {
+      guard state.start < state.end else {
+        throw EncodingError.outOfBounds
+      }
 
-    state.start += 1
-  }
+      state.buffer[state.start] = value
 
-  public static func decode(_ state: inout State) throws -> Value {
-    guard state.start < state.end else {
-      throw DecodingError.outOfBounds
+      state.start += 1
     }
 
-    let value = state.buffer[state.start]
+    public func decode(_ state: inout State) throws -> Value {
+      guard state.start < state.end else {
+        throw DecodingError.outOfBounds
+      }
 
-    state.start += 1
+      let value = state.buffer[state.start]
 
-    return value
-  }
-}
+      state.start += 1
 
-public struct UInt16: Codec {
-  public typealias Value = Swift.UInt16
-
-  public static func preencode(_ state: inout State, _ value: Value) {
-    state.end += 2
+      return value
+    }
   }
 
-  public static func encode(_ state: inout State, _ value: Value) throws {
-    guard state.start + 1 < state.end else {
-      throw EncodingError.outOfBounds
+  public struct UInt16: Codec {
+    public typealias Value = Swift.UInt16
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 2
     }
 
-    state.buffer[state.start] = Swift.UInt8(value & 0xff)
-    state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
+    public func encode(_ state: inout State, _ value: Value) throws {
+      guard state.start + 1 < state.end else {
+        throw EncodingError.outOfBounds
+      }
 
-    state.start += 2
-  }
+      state.buffer[state.start] = Swift.UInt8(value & 0xff)
+      state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
 
-  public static func decode(_ state: inout State) throws -> Value {
-    guard state.start + 1 < state.end else {
-      throw DecodingError.outOfBounds
+      state.start += 2
     }
 
-    let value =
-      Swift.UInt16(state.buffer[state.start])
-      | (Swift.UInt16(state.buffer[state.start + 1]) << 8)
+    public func decode(_ state: inout State) throws -> Value {
+      guard state.start + 1 < state.end else {
+        throw DecodingError.outOfBounds
+      }
 
-    state.start += 2
+      let value =
+        Swift.UInt16(state.buffer[state.start])
+        | (Swift.UInt16(state.buffer[state.start + 1]) << 8)
 
-    return value
-  }
-}
+      state.start += 2
 
-public struct UInt32: Codec {
-  public typealias Value = Swift.UInt32
-
-  public static func preencode(_ state: inout State, _ value: Value) {
-    state.end += 4
+      return value
+    }
   }
 
-  public static func encode(_ state: inout State, _ value: Value) throws {
-    guard state.start + 3 < state.end else {
-      throw EncodingError.outOfBounds
+  public struct UInt32: Codec {
+    public typealias Value = Swift.UInt32
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 4
     }
 
-    state.buffer[state.start] = Swift.UInt8(value & 0xff)
-    state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
-    state.buffer[state.start + 2] = Swift.UInt8((value >> 16) & 0xff)
-    state.buffer[state.start + 3] = Swift.UInt8((value >> 24) & 0xff)
+    public func encode(_ state: inout State, _ value: Value) throws {
+      guard state.start + 3 < state.end else {
+        throw EncodingError.outOfBounds
+      }
 
-    state.start += 4
-  }
+      state.buffer[state.start] = Swift.UInt8(value & 0xff)
+      state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
+      state.buffer[state.start + 2] = Swift.UInt8((value >> 16) & 0xff)
+      state.buffer[state.start + 3] = Swift.UInt8((value >> 24) & 0xff)
 
-  public static func decode(_ state: inout State) throws -> Value {
-    guard state.start + 3 < state.end else {
-      throw DecodingError.outOfBounds
+      state.start += 4
     }
 
-    let value =
-      Swift.UInt32(state.buffer[state.start])
-      | (Swift.UInt32(state.buffer[state.start + 1]) << 8)
-      | (Swift.UInt32(state.buffer[state.start + 2]) << 16)
-      | (Swift.UInt32(state.buffer[state.start + 3]) << 24)
+    public func decode(_ state: inout State) throws -> Value {
+      guard state.start + 3 < state.end else {
+        throw DecodingError.outOfBounds
+      }
 
-    state.start += 4
+      let value =
+        Swift.UInt32(state.buffer[state.start])
+        | (Swift.UInt32(state.buffer[state.start + 1]) << 8)
+        | (Swift.UInt32(state.buffer[state.start + 2]) << 16)
+        | (Swift.UInt32(state.buffer[state.start + 3]) << 24)
 
-    return value
-  }
-}
+      state.start += 4
 
-public struct UInt64: Codec {
-  public typealias Value = Swift.UInt64
-
-  public static func preencode(_ state: inout State, _ value: Value) {
-    state.end += 8
+      return value
+    }
   }
 
-  public static func encode(_ state: inout State, _ value: Value) throws {
-    guard state.start + 7 < state.end else {
-      throw EncodingError.outOfBounds
+  public struct UInt64: Codec {
+    public typealias Value = Swift.UInt64
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 8
     }
 
-    state.buffer[state.start] = Swift.UInt8(value & 0xff)
-    state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
-    state.buffer[state.start + 2] = Swift.UInt8((value >> 16) & 0xff)
-    state.buffer[state.start + 3] = Swift.UInt8((value >> 24) & 0xff)
-    state.buffer[state.start + 4] = Swift.UInt8((value >> 32) & 0xff)
-    state.buffer[state.start + 5] = Swift.UInt8((value >> 40) & 0xff)
-    state.buffer[state.start + 6] = Swift.UInt8((value >> 48) & 0xff)
-    state.buffer[state.start + 7] = Swift.UInt8((value >> 56) & 0xff)
+    public func encode(_ state: inout State, _ value: Value) throws {
+      guard state.start + 7 < state.end else {
+        throw EncodingError.outOfBounds
+      }
 
-    state.start += 8
-  }
+      state.buffer[state.start] = Swift.UInt8(value & 0xff)
+      state.buffer[state.start + 1] = Swift.UInt8((value >> 8) & 0xff)
+      state.buffer[state.start + 2] = Swift.UInt8((value >> 16) & 0xff)
+      state.buffer[state.start + 3] = Swift.UInt8((value >> 24) & 0xff)
+      state.buffer[state.start + 4] = Swift.UInt8((value >> 32) & 0xff)
+      state.buffer[state.start + 5] = Swift.UInt8((value >> 40) & 0xff)
+      state.buffer[state.start + 6] = Swift.UInt8((value >> 48) & 0xff)
+      state.buffer[state.start + 7] = Swift.UInt8((value >> 56) & 0xff)
 
-  public static func decode(_ state: inout State) throws -> Value {
-    guard state.start + 7 < state.end else {
-      throw DecodingError.outOfBounds
+      state.start += 8
     }
 
-    let value =
-      Swift.UInt64(state.buffer[state.start])
-      | (Swift.UInt64(state.buffer[state.start + 1]) << 8)
-      | (Swift.UInt64(state.buffer[state.start + 2]) << 16)
-      | (Swift.UInt64(state.buffer[state.start + 3]) << 24)
-      | (Swift.UInt64(state.buffer[state.start + 4]) << 32)
-      | (Swift.UInt64(state.buffer[state.start + 5]) << 40)
-      | (Swift.UInt64(state.buffer[state.start + 6]) << 48)
-      | (Swift.UInt64(state.buffer[state.start + 7]) << 56)
+    public func decode(_ state: inout State) throws -> Value {
+      guard state.start + 7 < state.end else {
+        throw DecodingError.outOfBounds
+      }
 
-    state.start += 8
+      let value =
+        Swift.UInt64(state.buffer[state.start])
+        | (Swift.UInt64(state.buffer[state.start + 1]) << 8)
+        | (Swift.UInt64(state.buffer[state.start + 2]) << 16)
+        | (Swift.UInt64(state.buffer[state.start + 3]) << 24)
+        | (Swift.UInt64(state.buffer[state.start + 4]) << 32)
+        | (Swift.UInt64(state.buffer[state.start + 5]) << 40)
+        | (Swift.UInt64(state.buffer[state.start + 6]) << 48)
+        | (Swift.UInt64(state.buffer[state.start + 7]) << 56)
 
-    return value
+      state.start += 8
+
+      return value
+    }
+  }
+
+  public struct UInt: Codec {
+    public typealias Value = Swift.UInt
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end +=
+        value <= 0xfc
+        ? 1
+        : value <= 0xffff
+          ? 3
+          : value <= 0xffff_ffff
+            ? 5
+            : 9
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      if value <= 0xfc {
+        return try UInt8().encode(&state, Swift.UInt8(value))
+      }
+
+      guard state.start < state.end else {
+        throw EncodingError.outOfBounds
+      }
+
+      if value <= 0xffff {
+        state.buffer[state.start] = 0xfd
+
+        state.start += 1
+
+        return try UInt16().encode(&state, Swift.UInt16(value))
+      }
+
+      if value <= 0xffff_ffff {
+        state.buffer[state.start] = 0xfe
+
+        state.start += 1
+
+        return try UInt32().encode(&state, Swift.UInt32(value))
+      }
+
+      state.buffer[state.start] = 0xff
+
+      state.start += 1
+
+      return try UInt64().encode(&state, Swift.UInt64(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      guard state.start < state.end else {
+        throw DecodingError.outOfBounds
+      }
+
+      let value = try UInt8().decode(&state)
+
+      if value <= 0xfc {
+        return Swift.UInt(value)
+      }
+
+      if value == 0xfd {
+        return Swift.UInt(try UInt16().decode(&state))
+      }
+
+      if value == 0xfe {
+        return Swift.UInt(try UInt32().decode(&state))
+      }
+
+      return Swift.UInt(try UInt64().decode(&state))
+    }
   }
 }
