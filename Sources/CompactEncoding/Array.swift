@@ -1,10 +1,10 @@
 extension Primitive {
-  public struct Array<Item: Codec>: Codec {
-    public typealias Value = Swift.Array<Item.Value>
+  public struct Array<C: Codec>: Codec {
+    public typealias Value = Swift.Array<C.Value>
 
-    private let codec: Item
+    private let codec: C
 
-    public init(_ codec: Item) {
+    public init(_ codec: C) {
       self.codec = codec
     }
 
