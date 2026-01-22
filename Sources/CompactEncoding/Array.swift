@@ -29,7 +29,7 @@ extension Primitive {
 
       var result = Value()
 
-      result.reserveCapacity(Int(count))
+      result.reserveCapacity(Swift.Int(count))
 
       for _ in 0..<count {
         result.append(try codec.decode(&state))

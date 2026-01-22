@@ -212,4 +212,84 @@ extension Primitive {
       return Swift.UInt(try UInt64().decode(&state))
     }
   }
+
+  public struct Int8: Codec {
+    public typealias Value = Swift.Int8
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt8().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt8().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt8().decode(&state))
+    }
+  }
+
+  public struct Int16: Codec {
+    public typealias Value = Swift.Int16
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt16().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt16().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt16().decode(&state))
+    }
+  }
+
+  public struct Int32: Codec {
+    public typealias Value = Swift.Int32
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt32().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt32().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt32().decode(&state))
+    }
+  }
+
+  public struct Int64: Codec {
+    public typealias Value = Swift.Int64
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt64().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt64().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt64().decode(&state))
+    }
+  }
+
+  public struct Int: Codec {
+    public typealias Value = Swift.Int
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt().decode(&state))
+    }
+  }
 }
