@@ -1,5 +1,5 @@
 extension Primitive {
-  public struct String: Codec {
+  public struct UTF8: Codec {
     public typealias Value = Swift.String
 
     public func preencode(_ state: inout State, _ value: Value) {
@@ -35,7 +35,9 @@ extension Primitive {
 
       state.start += count
 
-      return Swift.String(decoding: data, as: UTF8.self)
+      return Swift.String(decoding: data, as: Swift.UTF8.self)
     }
   }
+
+  public typealias String = UTF8
 }
