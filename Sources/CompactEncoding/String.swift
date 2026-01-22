@@ -19,9 +19,9 @@ extension Primitive {
         throw EncodingError.outOfBounds
       }
 
-      state.buffer.replaceSubrange(state.start...state.start + count, with: value.utf8)
+      state.buffer.replaceSubrange(state.start..<state.start + count, with: value.utf8)
 
-      state.end += count
+      state.start += count
     }
 
     public func decode(_ state: inout State) throws -> Value {
