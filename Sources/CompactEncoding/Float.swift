@@ -38,6 +38,8 @@ extension Primitive {
     }
   }
 
+  public typealias Float = Float32
+
   public struct Float64: Codec {
     public typealias Value = Swift.Double
 
@@ -84,4 +86,6 @@ extension Primitive {
       return Double(bitPattern: bits)
     }
   }
+
+  public typealias Double = Float64
 }
