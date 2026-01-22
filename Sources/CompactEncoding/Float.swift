@@ -13,10 +13,10 @@ extension Primitive {
 
       let bits = value.bitPattern
 
-      state.buffer[state.start] = Swift.UInt8(bits & 0xFF)
-      state.buffer[state.start + 1] = Swift.UInt8((bits >> 8) & 0xFF)
-      state.buffer[state.start + 2] = Swift.UInt8((bits >> 16) & 0xFF)
-      state.buffer[state.start + 3] = Swift.UInt8((bits >> 24) & 0xFF)
+      state.buffer[state.start] = Swift.UInt8(bits & 0xff)
+      state.buffer[state.start + 1] = Swift.UInt8((bits >> 8) & 0xff)
+      state.buffer[state.start + 2] = Swift.UInt8((bits >> 16) & 0xff)
+      state.buffer[state.start + 3] = Swift.UInt8((bits >> 24) & 0xff)
 
       state.start += 4
     }
@@ -54,14 +54,14 @@ extension Primitive {
 
       let bits = value.bitPattern
 
-      state.buffer[state.start] = Swift.UInt8(bits & 0xFF)
-      state.buffer[state.start + 1] = Swift.UInt8((bits >> 8) & 0xFF)
-      state.buffer[state.start + 2] = Swift.UInt8((bits >> 16) & 0xFF)
-      state.buffer[state.start + 3] = Swift.UInt8((bits >> 24) & 0xFF)
-      state.buffer[state.start + 4] = Swift.UInt8((bits >> 32) & 0xFF)
-      state.buffer[state.start + 5] = Swift.UInt8((bits >> 40) & 0xFF)
-      state.buffer[state.start + 6] = Swift.UInt8((bits >> 48) & 0xFF)
-      state.buffer[state.start + 7] = Swift.UInt8((bits >> 56) & 0xFF)
+      state.buffer[state.start] = Swift.UInt8(bits & 0xff)
+      state.buffer[state.start + 1] = Swift.UInt8((bits >> 8) & 0xff)
+      state.buffer[state.start + 2] = Swift.UInt8((bits >> 16) & 0xff)
+      state.buffer[state.start + 3] = Swift.UInt8((bits >> 24) & 0xff)
+      state.buffer[state.start + 4] = Swift.UInt8((bits >> 32) & 0xff)
+      state.buffer[state.start + 5] = Swift.UInt8((bits >> 40) & 0xff)
+      state.buffer[state.start + 6] = Swift.UInt8((bits >> 48) & 0xff)
+      state.buffer[state.start + 7] = Swift.UInt8((bits >> 56) & 0xff)
 
       state.start += 8
     }
