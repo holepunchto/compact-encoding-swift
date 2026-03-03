@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 
 @testable import CompactEncoding
@@ -49,4 +50,43 @@ import Testing
 
   let value = try Primitive.UInt32().decode(&state)
   #expect(value == 12 | (34 << 8) | (56 << 16) | (78 << 24))
+}
+
+@Test func testUInt() throws {
+  var state = State()
+
+  Primitive.UInt().preencode(&state, 42)
+  #expect(state.start == 0)
+  #expect(state.end == 1)
+  Primitive.UInt().preencode(&state, 4200)
+  #expect(state.start == 0)
+  #expect(state.end == 4)
+  Primitive.UInt().preencode(&state, Swift.UInt.max)
+  #expect(state.start == 0)
+  #expect(state.end == 13)
+
+  state.allocate()
+
+  try Primitive.UInt().encode(&state, 42)
+  #expect(
+    state.buffer == Data([42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+  try Primitive.UInt().encode(&state, 4200)
+  #expect(
+    state.buffer == Data([42, 0xfd, 104, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+  try Primitive.UInt().encode(&state, Swift.UInt.max)
+  #expect(
+    state.buffer == Data([42, 0xfd, 104, 16, 0xff, 255, 255, 255, 255, 255, 255, 255, 255]))
+
+  state.rewind()
+
+  var value = try Primitive.UInt().decode(&state)
+  #expect(value == 42)
+  value = try Primitive.UInt().decode(&state)
+  #expect(value == 4200)
+  value = try Primitive.UInt().decode(&state)
+  #expect(value == Swift.UInt.max)
+  #expect(state.start == state.end)
+  #expect(throws: DecodingError.outOfBounds) {
+    try Primitive.UInt().decode(&state)
+  }
 }
