@@ -34,7 +34,7 @@ extension Primitive {
 
       state.start += 4
 
-      return Float(bitPattern: bits)
+      return Swift.Float(bitPattern: bits)
     }
   }
 
@@ -83,7 +83,7 @@ extension Primitive {
 
       state.start += 8
 
-      return Double(bitPattern: bits)
+      return Swift.Double(bitPattern: bits)
     }
   }
 
