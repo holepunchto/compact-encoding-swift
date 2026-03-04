@@ -1,5 +1,6 @@
 extension Primitive {
   public struct UInt8: Codec {
+    public init() {}
     public typealias Value = Swift.UInt8
 
     public func preencode(_ state: inout State, _ value: Value) {
