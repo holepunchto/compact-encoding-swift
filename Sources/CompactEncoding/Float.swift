@@ -2,6 +2,8 @@ extension Primitive {
   public struct Float32: Codec {
     public typealias Value = Swift.Float
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 4
     }
@@ -42,6 +44,8 @@ extension Primitive {
 
   public struct Float64: Codec {
     public typealias Value = Swift.Double
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 8

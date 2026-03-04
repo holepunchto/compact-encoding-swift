@@ -2,6 +2,8 @@ extension Primitive {
   public struct Bool: Codec {
     public typealias Value = Swift.Bool
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 1
     }

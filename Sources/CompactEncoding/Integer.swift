@@ -1,7 +1,8 @@
 extension Primitive {
   public struct UInt8: Codec {
-    public init() {}
     public typealias Value = Swift.UInt8
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 1
@@ -32,6 +33,8 @@ extension Primitive {
 
   public struct UInt16: Codec {
     public typealias Value = Swift.UInt16
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 2
@@ -65,6 +68,8 @@ extension Primitive {
 
   public struct UInt32: Codec {
     public typealias Value = Swift.UInt32
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 4
@@ -102,6 +107,8 @@ extension Primitive {
 
   public struct UInt64: Codec {
     public typealias Value = Swift.UInt64
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end += 8
@@ -147,6 +154,8 @@ extension Primitive {
 
   public struct UInt: Codec {
     public typealias Value = Swift.UInt
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       state.end +=
@@ -217,6 +226,8 @@ extension Primitive {
   public struct Int8: Codec {
     public typealias Value = Swift.Int8
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       UInt8().preencode(&state, zigZagEncode(value))
     }
@@ -232,6 +243,8 @@ extension Primitive {
 
   public struct Int16: Codec {
     public typealias Value = Swift.Int16
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       UInt16().preencode(&state, zigZagEncode(value))
@@ -249,6 +262,8 @@ extension Primitive {
   public struct Int32: Codec {
     public typealias Value = Swift.Int32
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       UInt32().preencode(&state, zigZagEncode(value))
     }
@@ -265,6 +280,8 @@ extension Primitive {
   public struct Int64: Codec {
     public typealias Value = Swift.Int64
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       UInt64().preencode(&state, zigZagEncode(value))
     }
@@ -280,6 +297,8 @@ extension Primitive {
 
   public struct Int: Codec {
     public typealias Value = Swift.Int
+
+    public init() {}
 
     public func preencode(_ state: inout State, _ value: Value) {
       UInt().preencode(&state, zigZagEncode(value))

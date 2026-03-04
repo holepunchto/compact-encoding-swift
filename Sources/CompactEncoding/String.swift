@@ -2,6 +2,8 @@ extension Primitive {
   public struct UTF8: Codec {
     public typealias Value = Swift.String
 
+    public init() {}
+
     public func preencode(_ state: inout State, _ value: Value) {
       let count = value.utf8.count
 
