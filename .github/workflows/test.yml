@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Swift on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Swift (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: '6.0'
+
+      - name: Run tests
+        run: swift test
