@@ -136,7 +136,7 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let value =
+      let value: Swift.UInt64 =
         Swift.UInt64(state.buffer[state.start])
         | (Swift.UInt64(state.buffer[state.start + 1]) << 8)
         | (Swift.UInt64(state.buffer[state.start + 2]) << 16)
