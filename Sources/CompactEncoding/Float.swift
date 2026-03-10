@@ -75,15 +75,10 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let bits =
-        Swift.UInt64(state.buffer[state.start])
-        | (Swift.UInt64(state.buffer[state.start + 1]) << 8)
-        | (Swift.UInt64(state.buffer[state.start + 2]) << 16)
-        | (Swift.UInt64(state.buffer[state.start + 3]) << 24)
-        | (Swift.UInt64(state.buffer[state.start + 4]) << 32)
-        | (Swift.UInt64(state.buffer[state.start + 5]) << 40)
-        | (Swift.UInt64(state.buffer[state.start + 6]) << 48)
-        | (Swift.UInt64(state.buffer[state.start + 7]) << 56)
+      let bits = Swift.UInt64(
+        littleEndian: state.buffer.subdata(in: state.start..<state.start + 8).withUnsafeBytes {
+          $0.load(as: Swift.UInt64.self)
+        })
 
       state.start += 8
 
