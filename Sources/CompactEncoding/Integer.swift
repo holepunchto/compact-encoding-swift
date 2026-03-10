@@ -136,9 +136,10 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let value = Swift.UInt64(littleEndian: state.buffer.subdata(in: state.start ..< state.start + 8).withUnsafeBytes {
-        $0.load(as: Swift.UInt64.self)
-      })
+      let value = Swift.UInt64(
+        littleEndian: state.buffer.subdata(in: state.start..<state.start + 8).withUnsafeBytes {
+          $0.load(as: Swift.UInt64.self)
+        })
 
       state.start += 8
 
