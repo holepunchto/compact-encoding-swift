@@ -15,16 +15,16 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [windows-2022]
+        os: [windows-latest]
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Swift (Windows)
-        if: matrix.os == 'windows-2022'
-        uses: SwiftyLab/setup-swift@latest
+        if: matrix.os == 'windows-latest'
+        uses: compnerd/gha-setup-swift@main
         with:
-          swift-version: "5.9.2"
+          swift-version: swift-5.10-release
 
       - name: Run tests
         run: swift test
