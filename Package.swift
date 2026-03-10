@@ -13,7 +13,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "CompactEncoding",
+      name: "CompactEncoding"
     ),
     .testTarget(
       name: "CompactEncodingTests",
