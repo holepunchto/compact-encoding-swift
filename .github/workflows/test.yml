@@ -28,4 +28,5 @@ jobs:
           swift-build: 5.10-RELEASE
 
       - name: Run tests
-        run: swift test
+      - run: swift build
+      - run: swift test
