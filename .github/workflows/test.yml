@@ -14,18 +14,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [windows-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Swift (Windows)
-        if: matrix.os == 'windows-latest'
-        uses: compnerd/gha-setup-swift@main
-        with:
-          swift-version: swift-5.10-release
-          swift-build: 5.10-RELEASE
+      # - name: Setup Swift (Windows)
+      #   if: matrix.os == 'windows-latest'
+      #   uses: compnerd/gha-setup-swift@main
+      #   with:
+      #     swift-version: swift-5.10-release
+      #     swift-build: 5.10-RELEASE
 
       - name: Build
         run: swift build
