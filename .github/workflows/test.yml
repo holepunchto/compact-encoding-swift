@@ -1,5 +1,4 @@
 name: Test
-
 on:
   push:
     branches:
@@ -7,26 +6,15 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   test:
-    name: Swift on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
-
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      # - name: Setup Swift (Windows)
-      #   if: matrix.os == 'windows-latest'
-      #   uses: compnerd/gha-setup-swift@main
-      #   with:
-      #     swift-version: swift-5.10-release
-      #     swift-build: 5.10-RELEASE
-
-      - name: Build
-        run: swift build
-      - name: Run tests
-        run: swift test
+      - run: swift build
+      - run: swift test
