@@ -12,8 +12,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            platform: linux
           - os: macos-latest
+            platform: darwin
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
       - run: swift build
