@@ -27,6 +27,7 @@ jobs:
           swift-version: swift-5.10-release
           swift-build: 5.10-RELEASE
 
+      - name: Build
+        run: swift build
       - name: Run tests
-      - run: swift build
-      - run: swift test
+        run: swift test
