@@ -19,31 +19,21 @@ func zigZagEncode(_ value: Int) -> UInt {
 }
 
 func zigZagDecode(_ value: UInt8) -> Int8 {
-  let signed = Int8(bitPattern: value)
-
-  return (signed >> 1) ^ -(signed & 1)
+  return Int8(bitPattern: (value >> 1) ^ (0 &- (value & 1)))
 }
 
 func zigZagDecode(_ value: UInt16) -> Int16 {
-  let signed = Int16(bitPattern: value)
-
-  return (signed >> 1) ^ -(signed & 1)
+  return Int16(bitPattern: (value >> 1) ^ (0 &- (value & 1)))
 }
 
 func zigZagDecode(_ value: UInt32) -> Int32 {
-  let signed = Int32(bitPattern: value)
-
-  return (signed >> 1) ^ -(signed & 1)
+  return Int32(bitPattern: (value >> 1) ^ (0 &- (value & 1)))
 }
 
 func zigZagDecode(_ value: UInt64) -> Int64 {
-  let signed = Int64(bitPattern: value)
-
-  return (signed >> 1) ^ -(signed & 1)
+  return Int64(bitPattern: (value >> 1) ^ (0 &- (value & 1)))
 }
 
 func zigZagDecode(_ value: UInt) -> Int {
-  let signed = Int(bitPattern: value)
-
-  return (signed >> 1) ^ -(signed & 1)
+  return Int(bitPattern: (value >> 1) ^ (0 &- (value & 1)))
 }
