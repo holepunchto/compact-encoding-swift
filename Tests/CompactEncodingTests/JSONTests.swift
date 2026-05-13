@@ -17,6 +17,20 @@ import Testing
   #expect(state.start == state.end)
 }
 
+@Test func testJSONEmptyObject() throws {
+  var state = State()
+  let input: Any = [String: Any]()
+
+  Primitive.JSON().preencode(&state, input)
+  state.allocate()
+  try Primitive.JSON().encode(&state, input)
+  state.rewind()
+
+  let decoded = try Primitive.JSON().decode(&state) as! [String: Any]
+  #expect(decoded.isEmpty)
+  #expect(state.start == state.end)
+}
+
 @Test func testJSONNumber() throws {
   var state = State()
   let input: Any = 42
@@ -31,8 +45,8 @@ import Testing
   #expect(state.buffer[2] == 0x32)  // '2'
 
   state.rewind()
-  let decoded = try Primitive.JSON().decode(&state) as! Int
-  #expect(decoded == 42)
+  let decoded = try Primitive.JSON().decode(&state)
+  #expect((decoded as? NSNumber)?.intValue == 42)
   #expect(state.start == state.end)
 }
 
@@ -78,6 +92,7 @@ import Testing
   #expect(state.start == state.end)
 }
 
+
 @Test func testJSONArray() throws {
   var state = State()
   let input: Any = [1, 2, 3]
@@ -87,7 +102,31 @@ import Testing
   try Primitive.JSON().encode(&state, input)
   state.rewind()
 
-  let decoded = try Primitive.JSON().decode(&state) as! [Int]
-  #expect(decoded == [1, 2, 3])
+  let decoded = try Primitive.JSON().decode(&state) as! [NSNumber]
+  #expect(decoded.map(\.intValue) == [1, 2, 3])
   #expect(state.start == state.end)
+}
+
+@Test func testJSONEmptyArray() throws {
+  var state = State()
+  let input: Any = [Any]()
+
+  Primitive.JSON().preencode(&state, input)
+  state.allocate()
+  try Primitive.JSON().encode(&state, input)
+  state.rewind()
+
+  let decoded = try Primitive.JSON().decode(&state) as! [Any]
+  #expect(decoded.isEmpty)
+  #expect(state.start == state.end)
+}
+
+
+@Test func testJSONDecodeInvalidJSON() throws {
+  // Valid buffer length prefix but content is not valid JSON
+  var state = State(Data([0x03, 0x58, 0x58, 0x58]))  // length=3, content="XXX"
+
+  #expect(throws: (any Error).self) {
+    _ = try Primitive.JSON().decode(&state)
+  }
 }
