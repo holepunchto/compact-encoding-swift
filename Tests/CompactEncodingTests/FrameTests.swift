@@ -39,7 +39,8 @@ import Testing
   state.allocate()
   try Primitive.Frame(Primitive.Buffer()).encode(&state, Data())
 
-  // empty buffer = 1 byte (length 0), frame length = 1
+  // empty buffer encodes as 1 byte (length varint 0x00).
+  // Frame: length prefix 0x01, then that 1 byte → [0x01, 0x00]
   let expected: [UInt8] = [0x01, 0x00]
   #expect(Swift.Array(state.buffer) == expected)
 
@@ -60,6 +61,15 @@ import Testing
   state.rewind()
   let decoded = try codec.decode(&state)
   #expect(decoded == [1, 2, 3])
+}
+
+@Test func testFrameDecodeOutOfBounds() throws {
+  // Truncated buffer: declares a 10-byte frame but only 3 bytes follow
+  let raw = Data([0x0a, 0x01, 0x02, 0x03])
+  var state = State(raw)
+  #expect(throws: DecodingError.outOfBounds) {
+    _ = try Primitive.Frame(Primitive.UInt()).decode(&state)
+  }
 }
 
 @Test func testFrameDecodeIsolation() throws {
