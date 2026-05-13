@@ -24,8 +24,11 @@ extension Primitive {
       let byteCount = inner.end
       inner.allocate()
       try codec.encode(&inner, value)
+      // Measure varint overhead so the total-space check happens before any write.
+      var varintState = State()
+      Primitive.UInt().preencode(&varintState, Swift.UInt(byteCount))
+      guard state.remaining >= varintState.end + byteCount else { throw EncodingError.outOfBounds }
       try Primitive.UInt().encode(&state, Swift.UInt(byteCount))
-      guard state.remaining >= byteCount else { throw EncodingError.outOfBounds }
       state.buffer.replaceSubrange(state.start..<(state.start + byteCount), with: inner.buffer)
       state.start += byteCount
     }

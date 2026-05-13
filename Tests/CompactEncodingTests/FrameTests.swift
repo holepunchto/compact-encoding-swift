@@ -24,7 +24,7 @@ import Testing
   state.allocate()
   try Primitive.Frame(Primitive.UTF8()).encode(&state, "hello")
 
-  // "hello" = 5 bytes, prefixed by length 5, frame length = 6 (1 for length varint + 5 chars)
+  // UTF8 encodes "hello" as [0x05, h,e,l,l,o] = 6 bytes. Frame prefix = varint(6) = 0x06.
   let expected: [UInt8] = [0x06, 0x05, 0x68, 0x65, 0x6c, 0x6c, 0x6f]
   #expect(Swift.Array(state.buffer) == expected)
 
@@ -61,6 +61,14 @@ import Testing
   state.rewind()
   let decoded = try codec.decode(&state)
   #expect(decoded == [1, 2, 3])
+}
+
+@Test func testFrameEncodeOutOfBounds() throws {
+  // Zero-size buffer — encode without preencode/allocate
+  var state = State()
+  #expect(throws: EncodingError.outOfBounds) {
+    try Primitive.Frame(Primitive.UInt()).encode(&state, 42)
+  }
 }
 
 @Test func testFrameDecodeOutOfBounds() throws {
