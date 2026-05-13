@@ -13,9 +13,7 @@ extension Primitive {
     public func preencode(_ state: inout State, _ value: C.Value) {
       var inner = State()
       codec.preencode(&inner, value)
-      inner.allocate()
-      try! codec.encode(&inner, value)
-      let byteCount = inner.buffer.count
+      let byteCount = inner.end
       Primitive.UInt().preencode(&state, Swift.UInt(byteCount))
       state.end += byteCount
     }
