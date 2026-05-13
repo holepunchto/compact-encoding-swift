@@ -92,7 +92,6 @@ import Testing
   #expect(state.start == state.end)
 }
 
-
 @Test func testJSONArray() throws {
   var state = State()
   let input: Any = [1, 2, 3]
@@ -120,7 +119,6 @@ import Testing
   #expect(decoded.isEmpty)
   #expect(state.start == state.end)
 }
-
 
 @Test func testJSONDecodeInvalidJSON() throws {
   // Valid buffer length prefix but content is not valid JSON
