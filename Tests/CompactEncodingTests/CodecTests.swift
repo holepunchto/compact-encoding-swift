@@ -1,5 +1,3 @@
-// Plain (non-@testable) import: this file only compiles if the convenience
-// encode/decode functions — and the codecs they take — are public.
 import CompactEncoding
 import Foundation
 import Testing
