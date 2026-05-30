@@ -1,6 +1,17 @@
+import Foundation
 import Testing
 
 @testable import CompactEncoding
+
+@Test func testArrayDecodeHugeCountThrows() throws {
+  // A 0xff-prefixed varint declares count = UInt.max with no elements following.
+  // Without a bounds check this traps in Int(count) / over-reserves; it must throw.
+  var state = State(Data([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]))
+
+  #expect(throws: DecodingError.outOfBounds) {
+    _ = try Primitive.Array(Primitive.UInt()).decode(&state)
+  }
+}
 
 @Test func testArrayUInt() throws {
   var state = State()

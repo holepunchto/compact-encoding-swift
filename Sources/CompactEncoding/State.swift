@@ -11,8 +11,10 @@ public struct State {
   public init() {}
 
   public init(_ buffer: Data) {
-    self.end = buffer.count
-    self.buffer = buffer
+    // A Data slice keeps its parent's indices (buffer[10...] starts at 10), but
+    // the codecs index from start = 0. Re-base so buffer[0] is always valid.
+    self.buffer = Data(buffer)
+    self.end = self.buffer.count
   }
 
   public mutating func allocate() {

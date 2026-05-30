@@ -26,6 +26,11 @@ extension Primitive {
 
     public func decode(_ state: inout State) throws -> [Swift.String: C.Value] {
       let count = try Primitive.UInt().decode(&state)
+      // Each entry is at least one byte (its key length prefix), so a count
+      // larger than the bytes left is malformed — reject before looping.
+      guard count <= Swift.UInt(state.remaining) else {
+        throw DecodingError.outOfBounds
+      }
       var result: [Swift.String: C.Value] = [:]
       for _ in 0..<count {
         let k = try Primitive.UTF8().decode(&state)
