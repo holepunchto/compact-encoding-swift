@@ -56,9 +56,10 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let value =
-        Swift.UInt16(state.buffer[state.start])
-        | (Swift.UInt16(state.buffer[state.start + 1]) << 8)
+      var value: Swift.UInt16 = 0
+      for i in 0..<2 {
+        value |= Swift.UInt16(state.buffer[state.start + i]) << (8 * i)
+      }
 
       state.start += 2
 
