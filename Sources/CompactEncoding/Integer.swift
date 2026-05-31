@@ -93,11 +93,10 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let value =
-        Swift.UInt32(state.buffer[state.start])
-        | (Swift.UInt32(state.buffer[state.start + 1]) << 8)
-        | (Swift.UInt32(state.buffer[state.start + 2]) << 16)
-        | (Swift.UInt32(state.buffer[state.start + 3]) << 24)
+      var value: Swift.UInt32 = 0
+      for i in 0..<4 {
+        value |= Swift.UInt32(state.buffer[state.start + i]) << (8 * i)
+      }
 
       state.start += 4
 
@@ -136,15 +135,10 @@ extension Primitive {
         throw DecodingError.outOfBounds
       }
 
-      let value =
-        Swift.UInt64(state.buffer[state.start])
-        | (Swift.UInt64(state.buffer[state.start + 1]) << 8)
-        | (Swift.UInt64(state.buffer[state.start + 2]) << 16)
-        | (Swift.UInt64(state.buffer[state.start + 3]) << 24)
-        | (Swift.UInt64(state.buffer[state.start + 4]) << 32)
-        | (Swift.UInt64(state.buffer[state.start + 5]) << 40)
-        | (Swift.UInt64(state.buffer[state.start + 6]) << 48)
-        | (Swift.UInt64(state.buffer[state.start + 7]) << 56)
+      var value: Swift.UInt64 = 0
+      for i in 0..<8 {
+        value |= Swift.UInt64(state.buffer[state.start + i]) << (8 * i)
+      }
 
       state.start += 8
 
