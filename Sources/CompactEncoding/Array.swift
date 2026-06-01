@@ -27,6 +27,13 @@ extension Primitive {
     public func decode(_ state: inout State) throws -> Value {
       let count = try Primitive.UInt().decode(&state)
 
+      // Every element costs at least one byte, so a count larger than the bytes
+      // left can only come from a malformed buffer. Guard before reserving, or a
+      // crafted length traps Int(count) / reserves gigabytes.
+      guard count <= Swift.UInt(state.remaining) else {
+        throw DecodingError.outOfBounds
+      }
+
       var result = Value()
 
       result.reserveCapacity(Swift.Int(count))

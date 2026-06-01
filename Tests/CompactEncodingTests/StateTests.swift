@@ -59,6 +59,21 @@ import Testing
   #expect(state.buffer == Data())
 }
 
+@Test func testStateBufferInitRebasesSlice() throws {
+  // A Data slice keeps its parent's indices (startIndex != 0). State must re-base
+  // it so codecs that index from 0 don't trap or read the wrong bytes.
+  let parent = Data([0xaa, 0xbb, 0xcc, 0x2a])  // 0x2a == 42
+  let slice = parent[3...]  // startIndex == 3
+  #expect(slice.startIndex == 3)
+
+  var state = State(slice)
+  #expect(state.start == 0)
+  #expect(state.end == 1)
+
+  let value = try Primitive.UInt8().decode(&state)
+  #expect(value == 42)
+}
+
 @Test func testStateRewind() {
   var state = State()
 

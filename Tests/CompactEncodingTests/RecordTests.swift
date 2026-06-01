@@ -1,6 +1,17 @@
+import Foundation
 import Testing
 
 @testable import CompactEncoding
+
+@Test func testRecordDecodeHugeCountThrows() throws {
+  // A 0xff-prefixed varint declares count = UInt.max with no entries following.
+  // Must throw rather than trap in Int(count) or spin millions of iterations.
+  var state = State(Data([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]))
+
+  #expect(throws: DecodingError.outOfBounds) {
+    _ = try Primitive.Record(Primitive.UInt()).decode(&state)
+  }
+}
 
 @Test func testRecordUInt() throws {
   var state = State()
