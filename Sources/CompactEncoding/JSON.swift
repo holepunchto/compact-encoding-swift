@@ -10,14 +10,22 @@ extension Primitive {
 
     private let buffer = Primitive.Buffer()
 
+    // .sortedKeys makes object output deterministic: Swift's Dictionary is
+    // unordered and JSONSerialization is otherwise free to emit keys in any
+    // order, so without this the same value can encode to different bytes from
+    // run to run — breaking anything that hashes or compares the encoding.
+    private static let options: JSONSerialization.WritingOptions = [.fragmentsAllowed, .sortedKeys]
+
     public func preencode(_ state: inout State, _ value: Value) {
+      // preencode can't throw; if serialization fails here it fails again in
+      // encode, which does throw, so the error still surfaces there.
       let data =
-        (try? JSONSerialization.data(withJSONObject: value, options: .fragmentsAllowed)) ?? Data()
+        (try? JSONSerialization.data(withJSONObject: value, options: Self.options)) ?? Data()
       buffer.preencode(&state, data)
     }
 
     public func encode(_ state: inout State, _ value: Value) throws {
-      let data = try JSONSerialization.data(withJSONObject: value, options: .fragmentsAllowed)
+      let data = try JSONSerialization.data(withJSONObject: value, options: Self.options)
       try buffer.encode(&state, data)
     }
 

@@ -120,6 +120,28 @@ import Testing
   #expect(state.start == state.end)
 }
 
+@Test func testJSONObjectKeysSortedAndDeterministic() throws {
+  // Keys given out of order must encode in sorted order, identically every run.
+  let input: Any = ["banana": 1, "apple": 2]
+
+  func encodeJSON(_ value: Any) throws -> Data {
+    var state = State()
+    Primitive.JSON().preencode(&state, value)
+    state.allocate()
+    try Primitive.JSON().encode(&state, value)
+    return state.buffer
+  }
+
+  let first = try encodeJSON(input)
+  let second = try encodeJSON(input)
+  #expect(first == second)
+
+  // The payload after the varint length prefix is canonical (keys sorted).
+  var state = State(first)
+  let payload = try Primitive.Buffer().decode(&state)
+  #expect(Swift.String(decoding: payload, as: Swift.UTF8.self) == #"{"apple":2,"banana":1}"#)
+}
+
 @Test func testJSONDecodeInvalidJSON() throws {
   // Valid buffer length prefix but content is not valid JSON
   var state = State(Data([0x03, 0x58, 0x58, 0x58]))  // length=3, content="XXX"
