@@ -2,8 +2,6 @@
 
 Compact encoding schemes for Swift. The Swift counterpart of [compact-encoding](https://github.com/holepunchto/compact-encoding), and wire compatible with it.
 
-## Installation
-
 ```swift
 dependencies: [
   .package(url: "https://github.com/holepunchto/compact-encoding-swift", from: "<tag>")
