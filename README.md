@@ -1,26 +1,15 @@
 # compact-encoding-swift
 
-A Swift implementation of [compact-encoding](https://github.com/holepunchto/compact-encoding), a series of compact encoding schemes for building small and fast binary parsers and serializers.
+Compact encoding schemes for Swift. The Swift counterpart of [compact-encoding](https://github.com/holepunchto/compact-encoding), and wire compatible with it.
 
 ## Installation
 
-Add the package to your `Package.swift`:
-
 ```swift
 dependencies: [
-  .package(url: "https://github.com/holepunchto/compact-encoding-swift", from: "1.0.0")
+  .package(url: "https://github.com/holepunchto/compact-encoding-swift", from: "<tag>")
 ]
-```
 
-Then add `CompactEncoding` to your target's dependencies:
-
-```swift
-.target(
-  name: "MyTarget",
-  dependencies: [
-    .product(name: "CompactEncoding", package: "compact-encoding-swift")
-  ]
-)
+.product(name: "CompactEncoding", package: "compact-encoding-swift")
 ```
 
 ## Usage
@@ -59,18 +48,18 @@ let s = try Primitive.UTF8().decode(&state)  // "hi"
 
 All codecs live under the `Primitive` namespace and conform to the `Codec` protocol.
 
-| Codec | Swift value |
-| --- | --- |
-| `Primitive.UInt`, `Primitive.UInt8/16/32/64` | unsigned integers (varint) |
-| `Primitive.Int`, `Primitive.Int8/16/32/64` | signed integers (zigzag varint) |
-| `Primitive.Bool` | `Bool` |
-| `Primitive.Float32` (alias `Float`), `Primitive.Float64` (alias `Double`) | floating point |
-| `Primitive.UTF8` (alias `String`) | `String` |
-| `Primitive.Buffer` | `Data` |
-| `Primitive.Array(codec)` | `[Value]` |
-| `Primitive.Record(codec)` | `[String: Value]`, encoded with deterministic key order |
-| `Primitive.Frame(codec)` | length-prefixed value |
-| `Primitive.JSON` | `Any`, encoded as deterministic JSON |
+| Codec                                                                     | Swift value                                             |
+| ------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `Primitive.UInt`, `Primitive.UInt8/16/32/64`                              | unsigned integers (varint)                              |
+| `Primitive.Int`, `Primitive.Int8/16/32/64`                                | signed integers (zigzag varint)                         |
+| `Primitive.Bool`                                                          | `Bool`                                                  |
+| `Primitive.Float32` (alias `Float`), `Primitive.Float64` (alias `Double`) | floating point                                          |
+| `Primitive.UTF8` (alias `String`)                                         | `String`                                                |
+| `Primitive.Buffer`                                                        | `Data`                                                  |
+| `Primitive.Array(codec)`                                                  | `[Value]`                                               |
+| `Primitive.Record(codec)`                                                 | `[String: Value]`, encoded with deterministic key order |
+| `Primitive.Frame(codec)`                                                  | length-prefixed value                                   |
+| `Primitive.JSON`                                                          | `Any`, encoded as deterministic JSON                    |
 
 ## Custom codecs
 
