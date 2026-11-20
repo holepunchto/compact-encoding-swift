@@ -4,8 +4,8 @@
 # arrives by bumping VERSION and SHA256 together.
 set -eu
 
-VERSION=0.3.0
-SHA256=effe7a66dc4d48442de1c2897f81ad6e3a29376384e6bd67b33bfd63d94e7da9
+VERSION=0.3.1
+SHA256=e1f518f05e52f22d6602d6e14e48323f0dde8ce19b557a67fd8bce74d6d109ab
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 dest=$root/.corpus
