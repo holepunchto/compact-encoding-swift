@@ -5,3 +5,6 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
+
+# Conformance corpus, resolved by Scripts/fetch-corpus.sh
+/.corpus

@@ -99,6 +99,17 @@ struct PointCodec: Codec {
 }
 ```
 
+## Conformance
+
+The package is checked against [compact-encoding-test](https://github.com/holepunchto/compact-encoding-test), the cross-language corpus that states the format. The fixtures are pinned rather than vendored, so fetch them before running the suite:
+
+```sh
+Scripts/fetch-corpus.sh
+swift test
+```
+
+The harness reports, per capability, the cases that matched, the cases that diverged, and whether this package provides the codec at all. A capability it does not provide is a declaration rather than a failure.
+
 ## License
 
 Apache-2.0
