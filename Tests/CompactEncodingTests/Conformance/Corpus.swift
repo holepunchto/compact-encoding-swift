@@ -1,7 +1,7 @@
 import Foundation
 
-// The fixtures are resolved by Scripts/fetch-corpus.sh rather than vendored, so
-// a case added upstream arrives by bumping the pin in that script.
+// The corpus is resolved as an npm dev dependency rather than vendored, so a
+// case added upstream arrives through the pin in package.json.
 enum Corpus {
   static let root: URL = {
     if let override = ProcessInfo.processInfo.environment["COMPACT_ENCODING_CORPUS"] {
@@ -13,7 +13,8 @@ enum Corpus {
       .deletingLastPathComponent()  // CompactEncodingTests
       .deletingLastPathComponent()  // Tests
       .deletingLastPathComponent()  // repository root
-      .appendingPathComponent(".corpus")
+      .appendingPathComponent("node_modules")
+      .appendingPathComponent("compact-encoding-test")
   }()
 
   static var fixtures: URL {
@@ -113,6 +114,6 @@ enum JSONValue: Decodable {
 
 struct MissingCorpus: Error, CustomStringConvertible {
   var description: String {
-    "No corpus under \(Corpus.root.path). Run Scripts/fetch-corpus.sh."
+    "No corpus under \(Corpus.root.path). Run npm install."
   }
 }

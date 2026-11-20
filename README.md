@@ -88,10 +88,10 @@ struct PointCodec: Codec {
 
 ## Conformance
 
-The package is checked against [compact-encoding-test](https://github.com/holepunchto/compact-encoding-test), the cross-language corpus that states the format. The fixtures are pinned rather than vendored, so fetch them before running the suite:
+The package is checked against [compact-encoding-test](https://github.com/holepunchto/compact-encoding-test), the cross-language corpus that states the format. The corpus is an npm dev dependency rather than a vendored copy, so install it before running the suite:
 
 ```sh
-Scripts/fetch-corpus.sh
+npm install
 swift test
 ```
 

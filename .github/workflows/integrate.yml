@@ -32,5 +32,6 @@ jobs:
     name: Test / ${{ matrix.platform }}
     steps:
       - uses: holepunchto/actions/swift-base@v1
-      - run: Scripts/fetch-corpus.sh
+      - uses: actions/setup-node@v4
+      - run: npm install
       - run: swift test
