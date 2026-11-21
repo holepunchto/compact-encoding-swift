@@ -33,6 +33,16 @@ enum Corpus {
       .sorted()
   }
 
+  static func version() throws -> String {
+    try load(Manifest.self, from: root.appendingPathComponent("package.json")).version
+  }
+
+  // Counted from the fixtures rather than written down, so the partition check
+  // keeps holding as the corpus grows.
+  static func total() throws -> Int {
+    try codecs().reduce(0) { try $0 + cases($1).cases.count }
+  }
+
   static func unrepresentable() throws -> Set<String> {
     Set(try load([String].self, from: fixtures.appendingPathComponent("unrepresentable.json")))
   }
@@ -50,6 +60,10 @@ enum Corpus {
   private static func load<T: Decodable>(_ type: T.Type, from url: URL) throws -> T {
     try JSONDecoder().decode(type, from: Data(contentsOf: url))
   }
+}
+
+struct Manifest: Decodable {
+  let version: String
 }
 
 struct CaseFile: Decodable {

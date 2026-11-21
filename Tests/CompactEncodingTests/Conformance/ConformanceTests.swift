@@ -9,13 +9,16 @@ struct Divergence {
   let given: Outcome
 }
 
+// `matched`, `diverged` and `unrun` partition the cases the corpus carries:
+// every case lands in exactly one, so a codec the port does not provide cannot
+// read as a passing one.
 struct Capability {
   let codec: String
   let supported: Bool
   let reason: String?
-  let total: Int
-  let matched: Int
+  let matched: [String]
   let diverged: [Divergence]
+  let unrun: [String]
 }
 
 // A case asks one of two questions: `value` asks what it encodes to, `bytes`
@@ -57,18 +60,18 @@ func run() throws -> [Capability] {
     // corpus's own reason for not covering it.
     guard !file.cases.isEmpty else {
       return Capability(
-        codec: name, supported: true, reason: file.reason, total: 0, matched: 0, diverged: [])
+        codec: name, supported: true, reason: file.reason, matched: [], diverged: [], unrun: [])
     }
 
     guard let subject = subjects[name] else {
       return Capability(
-        codec: name, supported: false, reason: nil, total: file.cases.count, matched: 0,
-        diverged: [])
+        codec: name, supported: false, reason: nil, matched: [], diverged: [],
+        unrun: file.cases.map(\.id))
     }
 
     let answers = try Corpus.answers(name)
 
-    var matched = 0
+    var matched: [String] = []
     var diverged: [Divergence] = []
 
     for example in file.cases {
@@ -85,56 +88,30 @@ func run() throws -> [Capability] {
         alternatives: alternatives,
         unrepresentable: unrepresentable
       ) {
-        matched += 1
+        matched.append(example.id)
       } else {
         diverged.append(Divergence(id: example.id, expected: expected, given: given))
       }
     }
 
     return Capability(
-      codec: name, supported: true, reason: nil, total: file.cases.count, matched: matched,
-      diverged: diverged)
+      codec: name, supported: true, reason: nil, matched: matched, diverged: diverged, unrun: [])
   }
 }
 
 @Test func conformance() throws {
   let report = try run()
 
-  let covered = report.filter { $0.supported && $0.total > 0 }
-  let unsupported = report.filter { !$0.supported }
-  let uncovered = report.filter { $0.supported && $0.total == 0 }
+  let corpus = try Corpus.version()
+  let json = try Report.json(report, corpus: corpus, implementation: "compact-encoding-swift")
 
-  let matched = report.reduce(0) { $0 + $1.matched }
+  print(json)
+
   let diverged = report.flatMap(\.diverged)
-  let skipped = unsupported.reduce(0) { $0 + $1.total }
+  let accounted = report.reduce(0) { $0 + $1.matched.count + $1.diverged.count + $1.unrun.count }
+  let carried = try Corpus.total()
 
-  for capability in covered {
-    let mark = capability.diverged.isEmpty ? "ok  " : "FAIL"
-    print("  \(mark) \(capability.codec.padded(to: 26)) \(capability.matched)/\(capability.total)")
-  }
-
-  print("\nnot provided by this package:")
-  for capability in unsupported {
-    print("  -    \(capability.codec.padded(to: 26)) \(capability.total) cases skipped")
-  }
-
-  print("\nno cases in the corpus: \(uncovered.count) codecs")
-
-  for divergence in diverged {
-    print("DIVERGES \(divergence.id)")
-    print("  corpus: \(divergence.expected)")
-    print("  port:   \(divergence.given)")
-  }
-
-  print(
-    "\n\(matched) cases matched, \(diverged.count) diverged, "
-      + "\(skipped) skipped as unsupported")
-
+  #expect(
+    accounted == carried, "the report does not account for every case the corpus carries")
   #expect(diverged.isEmpty, "\(diverged.count) cases diverge from the corpus")
-}
-
-extension String {
-  fileprivate func padded(to width: Int) -> String {
-    count >= width ? self : self + String(repeating: " ", count: width - count)
-  }
 }
