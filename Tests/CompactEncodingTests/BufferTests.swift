@@ -3,6 +3,16 @@ import Testing
 
 @testable import CompactEncoding
 
+@Test func testBufferDecodeHugeCountThrows() throws {
+  // A 0xff-prefixed varint declares count = UInt.max with no bytes following.
+  // Narrowing that to Int traps, so it is rejected before the conversion.
+  var state = State(Data([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]))
+
+  #expect(throws: DecodingError.outOfBounds) {
+    _ = try Primitive.Buffer().decode(&state)
+  }
+}
+
 @Test func testBuffer() throws {
   var state = State()
 
