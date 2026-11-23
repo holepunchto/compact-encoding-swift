@@ -8,9 +8,16 @@ extension Primitive {
       self.codec = codec
     }
 
+    // The key order is the UTF-8 bytes of the keys compared byte by byte, not
+    // the comparison Swift gives its strings: the two part company once
+    // normalisation differs.
+    private func sorted(_ value: Value) -> [(key: Swift.String, value: C.Value)] {
+      value.sorted { $0.key.utf8.lexicographicallyPrecedes($1.key.utf8) }
+    }
+
     public func preencode(_ state: inout State, _ value: [Swift.String: C.Value]) {
       Primitive.UInt().preencode(&state, Swift.UInt(value.count))
-      for (k, v) in value.sorted(by: { $0.key < $1.key }) {
+      for (k, v) in sorted(value) {
         Primitive.UTF8().preencode(&state, k)
         codec.preencode(&state, v)
       }
@@ -18,7 +25,7 @@ extension Primitive {
 
     public func encode(_ state: inout State, _ value: [Swift.String: C.Value]) throws {
       try Primitive.UInt().encode(&state, Swift.UInt(value.count))
-      for (k, v) in value.sorted(by: { $0.key < $1.key }) {
+      for (k, v) in sorted(value) {
         try Primitive.UTF8().encode(&state, k)
         try codec.encode(&state, v)
       }
