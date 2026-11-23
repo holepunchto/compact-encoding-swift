@@ -34,8 +34,10 @@ extension Primitive {
     }
 
     public func decode(_ state: inout State) throws -> C.Value {
-      let length = Swift.Int(try Primitive.UInt().decode(&state))
-      guard state.remaining >= length else { throw DecodingError.outOfBounds }
+      let count = try Primitive.UInt().decode(&state)
+      guard let length = Swift.Int(exactly: count), state.remaining >= length else {
+        throw DecodingError.outOfBounds
+      }
       let subData = Data(state.buffer[state.start..<(state.start + length)])
       state.start += length
       var inner = State(subData)
