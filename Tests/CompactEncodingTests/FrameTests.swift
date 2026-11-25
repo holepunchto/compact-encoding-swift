@@ -3,6 +3,15 @@ import Testing
 
 @testable import CompactEncoding
 
+@Test func testFrameDecodeHugeLengthThrows() throws {
+  // The frame announces UInt.max bytes, which narrowing to Int traps on.
+  var state = State(Data([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]))
+
+  #expect(throws: DecodingError.outOfBounds) {
+    _ = try Primitive.Frame(Primitive.UInt()).decode(&state)
+  }
+}
+
 @Test func testFrameUInt() throws {
   var state = State()
   Primitive.Frame(Primitive.UInt()).preencode(&state, 42)
