@@ -48,8 +48,8 @@ All codecs live under the `Primitive` namespace and conform to the `Codec` proto
 
 | Codec                                                                     | Swift value                                             |
 | ------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `Primitive.UInt`, `Primitive.UInt8/16/32/64`                              | unsigned integers (varint)                              |
-| `Primitive.Int`, `Primitive.Int8/16/32/64`                                | signed integers (zigzag varint)                         |
+| `Primitive.UInt`, `Primitive.UInt8/16/24/32/40/48/56/64`                  | unsigned integers (varint)                              |
+| `Primitive.Int`, `Primitive.Int8/16/24/32/40/48/56/64`                    | signed integers (zigzag varint)                         |
 | `Primitive.Bool`                                                          | `Bool`                                                  |
 | `Primitive.Float32` (alias `Float`), `Primitive.Float64` (alias `Double`) | floating point                                          |
 | `Primitive.UTF8` (alias `String`)                                         | `String`                                                |

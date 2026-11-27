@@ -308,3 +308,186 @@ extension Primitive {
     }
   }
 }
+
+// The widths with no Swift type of their own. Each carries the narrowest
+// integer that holds it, so a value too wide for the codec is one the type can
+// still be handed: it is refused here rather than being unrepresentable.
+extension Primitive {
+  public struct UInt24: Codec {
+    public typealias Value = Swift.UInt32
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 3
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try writeLittleEndian(&state, value, 3)
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      try readLittleEndian(&state, 3)
+    }
+  }
+
+  public struct UInt40: Codec {
+    public typealias Value = Swift.UInt64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 5
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try writeLittleEndian(&state, value, 5)
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      try readLittleEndian(&state, 5)
+    }
+  }
+
+  public struct UInt48: Codec {
+    public typealias Value = Swift.UInt64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 6
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try writeLittleEndian(&state, value, 6)
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      try readLittleEndian(&state, 6)
+    }
+  }
+
+  public struct UInt56: Codec {
+    public typealias Value = Swift.UInt64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      state.end += 7
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try writeLittleEndian(&state, value, 7)
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      try readLittleEndian(&state, 7)
+    }
+  }
+
+  public struct Int24: Codec {
+    public typealias Value = Swift.Int32
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt24().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt24().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt24().decode(&state))
+    }
+  }
+
+  public struct Int40: Codec {
+    public typealias Value = Swift.Int64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt40().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt40().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt40().decode(&state))
+    }
+  }
+
+  public struct Int48: Codec {
+    public typealias Value = Swift.Int64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt48().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt48().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt48().decode(&state))
+    }
+  }
+
+  public struct Int56: Codec {
+    public typealias Value = Swift.Int64
+
+    public init() {}
+
+    public func preencode(_ state: inout State, _ value: Value) {
+      UInt56().preencode(&state, zigZagEncode(value))
+    }
+
+    public func encode(_ state: inout State, _ value: Value) throws {
+      try UInt56().encode(&state, zigZagEncode(value))
+    }
+
+    public func decode(_ state: inout State) throws -> Value {
+      return zigZagDecode(try UInt56().decode(&state))
+    }
+  }
+}
+
+private func writeLittleEndian<V: FixedWidthInteger>(
+  _ state: inout State, _ value: V, _ bytes: Int
+) throws {
+  guard value >> (8 * bytes) == 0 else {
+    throw EncodingError.invalidSize
+  }
+
+  guard state.remaining >= bytes else {
+    throw EncodingError.outOfBounds
+  }
+
+  for i in 0..<bytes {
+    state.buffer[state.start + i] = UInt8(truncatingIfNeeded: value >> (8 * i))
+  }
+
+  state.start += bytes
+}
+
+private func readLittleEndian<V: FixedWidthInteger>(_ state: inout State, _ bytes: Int) throws -> V {
+  guard state.remaining >= bytes else {
+    throw DecodingError.outOfBounds
+  }
+
+  var value: V = 0
+
+  for i in 0..<bytes {
+    value |= V(state.buffer[state.start + i]) << (8 * i)
+  }
+
+  state.start += bytes
+
+  return value
+}

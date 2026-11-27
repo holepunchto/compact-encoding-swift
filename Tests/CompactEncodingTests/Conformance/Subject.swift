@@ -100,13 +100,21 @@ enum Subjects {
 
     all["uint8"] = unsigned(Primitive.UInt8())
     all["uint16"] = unsigned(Primitive.UInt16())
+    all["uint24"] = unsigned(Primitive.UInt24())
     all["uint32"] = unsigned(Primitive.UInt32())
+    all["uint40"] = unsigned(Primitive.UInt40())
+    all["uint48"] = unsigned(Primitive.UInt48())
+    all["uint56"] = unsigned(Primitive.UInt56())
     all["uint64"] = unsigned(Primitive.UInt64())
     all["uint"] = unsigned(Primitive.UInt())
 
     all["int8"] = signed(Primitive.Int8())
     all["int16"] = signed(Primitive.Int16())
+    all["int24"] = signed(Primitive.Int24())
     all["int32"] = signed(Primitive.Int32())
+    all["int40"] = signed(Primitive.Int40())
+    all["int48"] = signed(Primitive.Int48())
+    all["int56"] = signed(Primitive.Int56())
     all["int64"] = signed(Primitive.Int64())
     all["int"] = signed(Primitive.Int())
 
