@@ -12,6 +12,7 @@ public protocol Codec {
 
 public enum EncodingError: Error {
   case outOfBounds
+  case invalidSize
 }
 
 public enum DecodingError: Error {

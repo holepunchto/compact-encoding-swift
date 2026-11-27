@@ -73,6 +73,17 @@ enum Subjects {
     all["buffer"] = buffer
     all["uint8array"] = buffer
     all["utf8"] = subject(Primitive.UTF8(), taking: text, showing: { .text($0) })
+    all["raw"] = subject(Primitive.Raw(), taking: binary, showing: { .bytes($0) })
+    all["optionalBuffer"] = subject(
+      Primitive.OptionalBuffer(),
+      taking: optionalBinary,
+      showing: { data in data.map { Notation.bytes($0) } ?? .absent }
+    )
+
+    for size in [3, 8, 16, 24, 32, 64] {
+      all["fixed-\(size)"] = subject(
+        Primitive.Fixed(size), taking: binary, showing: { .bytes($0) })
+    }
 
     all["float32"] = subject(
       Primitive.Float32(),
@@ -194,6 +205,12 @@ func binary(_ json: JSONValue) throws -> Data {
     throw Boundary.unrepresentable
   }
   return decoded
+}
+
+func optionalBinary(_ json: JSONValue) throws -> Data? {
+  if case .null = json { return nil }
+
+  return try binary(json)
 }
 
 // Swift's String holds well-formed Unicode text, so a case naming an unpaired

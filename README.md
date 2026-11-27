@@ -54,6 +54,9 @@ All codecs live under the `Primitive` namespace and conform to the `Codec` proto
 | `Primitive.Float32` (alias `Float`), `Primitive.Float64` (alias `Double`) | floating point                                          |
 | `Primitive.UTF8` (alias `String`)                                         | `String`                                                |
 | `Primitive.Buffer`                                                        | `Data`                                                  |
+| `Primitive.Fixed(size)`                                                   | `Data` of exactly `size` bytes, written with no count   |
+| `Primitive.Raw`                                                           | `Data`, written with no count and decoded to the end    |
+| `Primitive.OptionalBuffer`                                                | `Data?`, where a count of zero reads back as `nil`      |
 | `Primitive.Array(codec)`                                                  | `[Value]`                                               |
 | `Primitive.Record(codec)`                                                 | `[String: Value]`, encoded with deterministic key order |
 | `Primitive.Frame(codec)`                                                  | length-prefixed value                                   |
